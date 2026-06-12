@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/', function () {
@@ -57,4 +58,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+    
+    Route::get('orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
+    Route::put('orders/{id}', [AdminOrderController::class, 'update'])->name('admin.orders.update');
 });
