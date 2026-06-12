@@ -90,7 +90,7 @@ class CartOrderTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('cart.index'));
 
         $response->assertStatus(200);
-        $response->assertJsonFragment(['title' => 'Gömlek']);
+        $response->assertSee('Gömlek');
     }
 
     public function test_user_can_remove_product_from_cart()
@@ -146,5 +146,13 @@ class CartOrderTest extends TestCase
         $this->assertDatabaseMissing('carts', [
             'user_id' => $this->user->id,
         ]);
+    }
+
+    public function test_user_can_access_checkout_page()
+    {
+        $response = $this->actingAs($this->user)->get(route('checkout.form'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Teslimat ve Ödeme Bilgileri');
     }
 }

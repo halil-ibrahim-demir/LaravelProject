@@ -13,7 +13,7 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = auth()->user()->carts()->with('product')->get();
-        return response()->json($cartItems);
+        return view('front.cart', compact('cartItems'));
     }
 
     public function store(Request $request)
