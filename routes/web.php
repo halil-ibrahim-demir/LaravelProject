@@ -30,14 +30,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/', function () {
-        return '<div style="font-family: sans-serif; padding: 40px; text-align: center; background: #0f172a; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <h1 style="color: #a5b4fc; margin-bottom: 10px;">Admin Paneline Hoş Geldiniz!</h1>
-                    <p style="color: #94a3b8;">Giriş yapan yetkili: <strong>' . auth()->user()->name . '</strong></p>
-                    <div style="margin-top: 20px; display: flex; gap: 15px;">
-                        <a href="'.route('home').'" style="padding: 8px 16px; background: #475569; color: white; text-decoration: none; border-radius: 6px;">Ana Sayfaya Dön</a>
-                        <form action="' . route('logout') . '" method="POST">' . csrf_field() . '<button type="submit" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">Çıkış Yap</button></form>
-                    </div>
-                </div>';
+        return view('admin.dashboard');
     })->name('admin.dashboard');
 
     Route::resource('categories', CategoryController::class);
