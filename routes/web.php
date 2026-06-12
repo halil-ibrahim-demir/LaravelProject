@@ -30,6 +30,16 @@ Route::get('/', function () {
             </div>';
 })->name('home');
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+});
+
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 
