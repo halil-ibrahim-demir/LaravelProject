@@ -30,6 +30,9 @@ Route::get('/', function () {
             </div>';
 })->name('home');
 
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/', function () {
         return '<div style="font-family: sans-serif; padding: 40px; text-align: center; background: #0f172a; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -41,4 +44,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
                     </div>
                 </div>';
     })->name('admin.dashboard');
+
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
 });

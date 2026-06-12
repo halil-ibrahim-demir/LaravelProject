@@ -16,7 +16,6 @@ class UserRoleTest extends TestCase
     {
         parent::setUp();
 
-        // Seed roles for each test
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
     }
