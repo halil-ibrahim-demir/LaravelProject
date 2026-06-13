@@ -25,6 +25,10 @@ Route::middleware('auth')->group(function () {
         return view('front.checkout');
     })->name('checkout.form');
     Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/order-success/{id}', function ($id) {
+        $order = \App\Models\Order::with('items.product')->findOrFail($id);
+        return view('front.order_success', compact('order'));
+    })->name('order.success');
 });
 
 use App\Http\Controllers\Admin\CategoryController;

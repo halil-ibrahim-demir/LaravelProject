@@ -207,7 +207,7 @@
         <div class="nav-links">
             <a href="{{ route('home') }}">Ana Sayfa</a>
             @auth
-                <a href="{{ route('cart.index') }}">Sepetim</a>
+                <a href="{{ route('cart.index') }}">Sepetim{!! auth()->user()->carts()->sum('quantity') > 0 ? '<span style="color: #10b981; font-weight: 600;"> (' . auth()->user()->carts()->sum('quantity') . ')</span>' : '' !!}</a>
                 @if (auth()->user()->hasRole('admin'))
                     <a href="{{ route('admin.dashboard') }}">Yönetim Paneli</a>
                 @endif
@@ -242,17 +242,26 @@
                 <span>{{ number_format($product->price, 2) }} TL</span>
             </div>
 
-            <div class="stock-status">
-                <span class="stock-dot"></span>
-                <span>Stokta Var ({{ $product->stock }} adet)</span>
-            </div>
+            @if ($product->stock > 0)
+                <div class="stock-status">
+                    <span class="stock-dot" style="background: var(--success-color);"></span>
+                    <span>Stokta Var ({{ $product->stock }} adet)</span>
+                </div>
 
-            <form action="{{ route('cart.store') }}" method="POST" class="cart-form">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="quantity-input" required>
-                <button type="submit" class="btn-submit">Sepete Ekle</button>
-            </form>
+                <form action="{{ route('cart.store') }}" method="POST" class="cart-form">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="quantity-input" required>
+                    <button type="submit" class="btn-submit">Sepete Ekle</button>
+                </form>
+            @else
+                <div class="stock-status">
+                    <span class="stock-dot" style="background: #ef4444;"></span>
+                    <span style="color: #ef4444; font-weight: 600;">Tükendi</span>
+                </div>
+
+                <button class="btn-submit" style="background: #1e293b; color: var(--text-muted); cursor: not-allowed;" disabled>Stok Tükendi</button>
+            @endif
         </div>
     </div>
 

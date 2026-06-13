@@ -21,7 +21,8 @@ class FrontController extends Controller
     {
         $category = Category::where('status', true)->findOrFail($id);
         $products = $category->products()->where('status', true)->get();
-        return view('front.products', compact('category', 'products'));
+        $categories = Category::where('status', true)->get();
+        return view('front.products', compact('category', 'products', 'categories'));
     }
 
     public function productDetail($id)

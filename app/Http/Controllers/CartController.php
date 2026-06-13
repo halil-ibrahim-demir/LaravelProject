@@ -31,6 +31,11 @@ class CartController extends Controller
             ->where('product_id', $product->id)
             ->first();
 
+        $currentQuantity = $cart ? $cart->quantity : 0;
+        if ($product->stock < ($currentQuantity + $quantity)) {
+            return redirect()->back()->with('error', 'Yetersiz stok miktarı.');
+        }
+
         if ($cart) {
             $cart->quantity += $quantity;
             $cart->save();
@@ -43,7 +48,7 @@ class CartController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Product added to cart', 'cart' => $cart], 201);
+        return redirect()->route('cart.index')->with('success', 'Ürün sepete eklendi.');
     }
 
     public function destroy($id)
@@ -51,6 +56,6 @@ class CartController extends Controller
         $cart = auth()->user()->carts()->findOrFail($id);
         $cart->delete();
 
-        return response()->json(['message' => 'Product removed from cart']);
+        return redirect()->back()->with('success', 'Ürün sepetten çıkarıldı.');
     }
 }

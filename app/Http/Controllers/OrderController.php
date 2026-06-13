@@ -18,7 +18,7 @@ class OrderController extends Controller
         $cartItems = $user->carts()->get();
 
         if ($cartItems->isEmpty()) {
-            return response()->json(['message' => 'Cart is empty'], 400);
+            return redirect()->route('cart.index')->with('error', 'Sepetiniz boş.');
         }
 
         $data = $request->validate([
@@ -38,38 +38,48 @@ class OrderController extends Controller
             $totalAmount += $item->price * $item->quantity;
         }
 
-        $order = DB::transaction(function () use ($user, $data, $totalAmount, $cartItems) {
-            $order = Order::create([
-                'user_id' => $user->id,
-                'name' => $data['name'],
-                'phone' => $data['phone'],
-                'address1' => $data['address1'],
-                'address2' => $data['address2'] ?? null,
-                'city' => $data['city'],
-                'state' => $data['state'] ?? null,
-                'country' => $data['country'],
-                'zipcode' => $data['zipcode'],
-                'total_amount' => $totalAmount,
-                'payment_method' => $data['payment_method'],
-                'payment_status' => 'pending',
-                'status' => 'pending',
-                'tracking_no' => 'TRK-' . strtoupper(Str::random(10)),
-            ]);
-
-            foreach ($cartItems as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product_id,
-                    'price' => $item->price,
-                    'quantity' => $item->quantity,
+        try {
+            $order = DB::transaction(function () use ($user, $data, $totalAmount, $cartItems) {
+                $order = Order::create([
+                    'user_id' => $user->id,
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'address1' => $data['address1'],
+                    'address2' => $data['address2'] ?? null,
+                    'city' => $data['city'],
+                    'state' => $data['state'] ?? null,
+                    'country' => $data['country'],
+                    'zipcode' => $data['zipcode'],
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $data['payment_method'],
+                    'payment_status' => 'pending',
+                    'status' => 'pending',
+                    'tracking_no' => 'TRK-' . strtoupper(Str::random(10)),
                 ]);
-            }
 
-            $user->carts()->delete();
+                foreach ($cartItems as $item) {
+                    $product = \App\Models\Product::lockForUpdate()->findOrFail($item->product_id);
+                    if ($product->stock < $item->quantity) {
+                        throw new \Exception("Yetersiz stok: {$product->title}");
+                    }
+                    $product->decrement('stock', $item->quantity);
 
-            return $order;
-        });
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item->product_id,
+                        'price' => $item->price,
+                        'quantity' => $item->quantity,
+                    ]);
+                }
 
-        return response()->json(['message' => 'Order placed successfully', 'order' => $order], 201);
+                $user->carts()->delete();
+
+                return $order;
+            });
+        } catch (\Exception $e) {
+            return redirect()->route('cart.index')->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('order.success', $order->id)->with('success', 'Siparişiniz başarıyla oluşturuldu.');
     }
 }

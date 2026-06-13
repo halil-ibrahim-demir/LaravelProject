@@ -50,7 +50,7 @@ class CartOrderTest extends TestCase
             'quantity' => 2,
         ]);
 
-        $response->assertStatus(201);
+        $response->assertRedirect(route('cart.index'));
         $this->assertDatabaseHas('carts', [
             'user_id' => $this->user->id,
             'product_id' => $this->product->id,
@@ -102,9 +102,11 @@ class CartOrderTest extends TestCase
             'price' => $this->product->price,
         ]);
 
-        $response = $this->actingAs($this->user)->delete(route('cart.destroy', $cart->id));
+        $response = $this->from(route('cart.index'))
+            ->actingAs($this->user)
+            ->delete(route('cart.destroy', $cart->id));
 
-        $response->assertStatus(200);
+        $response->assertRedirect(route('cart.index'));
         $this->assertDatabaseMissing('carts', ['id' => $cart->id]);
     }
 
@@ -127,9 +129,11 @@ class CartOrderTest extends TestCase
             'payment_method' => 'Credit Card',
         ]);
 
-        $response->assertStatus(201);
+        $order = Order::first();
+        $response->assertRedirect(route('order.success', $order->id));
 
         $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
             'user_id' => $this->user->id,
             'name' => 'John Doe',
             'total_amount' => 500.00,

@@ -218,7 +218,7 @@
         <div class="nav-links">
             <a href="{{ route('home') }}">Ana Sayfa</a>
             @auth
-                <a href="{{ route('cart.index') }}">Sepetim</a>
+                <a href="{{ route('cart.index') }}">Sepetim{!! auth()->user()->carts()->sum('quantity') > 0 ? '<span style="color: #10b981; font-weight: 600;"> (' . auth()->user()->carts()->sum('quantity') . ')</span>' : '' !!}</a>
                 @if (auth()->user()->hasRole('admin'))
                     <a href="{{ route('admin.dashboard') }}">Yönetim Paneli</a>
                 @endif

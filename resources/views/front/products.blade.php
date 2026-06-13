@@ -66,6 +66,48 @@
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        aside {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        aside h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .category-list a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .category-list a:hover {
+            color: var(--primary);
         }
 
         .header {
@@ -76,7 +118,7 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1.5rem;
         }
 
@@ -96,12 +138,28 @@
         }
 
         .product-image {
+            position: relative;
             height: 200px;
             background: #1e293b;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-muted);
+        }
+
+        .out-of-stock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(2px);
         }
 
         .product-info {
@@ -151,7 +209,7 @@
         <div class="nav-links">
             <a href="{{ route('home') }}">Ana Sayfa</a>
             @auth
-                <a href="{{ route('cart.index') }}">Sepetim</a>
+                <a href="{{ route('cart.index') }}">Sepetim{!! auth()->user()->carts()->sum('quantity') > 0 ? '<span style="color: #10b981; font-weight: 600;"> (' . auth()->user()->carts()->sum('quantity') . ')</span>' : '' !!}</a>
                 @if (auth()->user()->hasRole('admin'))
                     <a href="{{ route('admin.dashboard') }}">Yönetim Paneli</a>
                 @endif
@@ -166,11 +224,19 @@
     </nav>
 
     <div class="container">
-        <div class="header">
-            <h2>Kategori: {{ $category->title }}</h2>
-        </div>
+        <aside>
+            <h3>Kategoriler</h3>
+            <ul class="category-list">
+                @foreach ($categories as $cat)
+                    <li><a href="{{ route('category.products', $cat->id) }}">{{ $cat->title }}</a></li>
+                @endforeach
+            </ul>
+        </aside>
 
         <main>
+            <div class="header" style="margin-top: 0;">
+                <h2>Kategori: {{ $category->title }}</h2>
+            </div>
             @if($products->isEmpty())
                 <p style="color: var(--text-muted); font-size: 1.1rem;">Bu kategoride henüz ürün bulunmamaktadır.</p>
             @else
@@ -182,6 +248,9 @@
                                     <img src="{{ $product->image }}" alt="{{ $product->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                                 @else
                                     Görsel Yok
+                                @endif
+                                @if ($product->stock <= 0)
+                                    <div class="out-of-stock-overlay">Tükendi</div>
                                 @endif
                             </div>
                             <div class="product-info">
