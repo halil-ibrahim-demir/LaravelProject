@@ -1,59 +1,39 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Name, Surname: Halil İbrahim Demir
+Student Number: 20232022938
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# 🛍️ Modern E-Commerce Platform (Laravel)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This project is a fully-featured, production-ready E-Commerce web application developed using the Laravel framework. It is built in accordance with modern web design trends, featuring a premium dark mode, subtle glassmorphism effects, a sophisticated color palette, and dynamic micro-interactions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The application includes both a polished customer-facing storefront and a comprehensive, robust administrative control panel.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 👤 User & Role Management
+- **Role-Based Access Control (RBAC):** Strict permission checks enforced for `Admin` and `Standard User` roles.
+- **Secure Authentication:** Built on top of the native Laravel Authentication system, featuring a sleek, secure custom login portal.
+- **Dashboard Security Middleware:** Access restriction to the administrative zone (`/admin`), accessible only by verified users with the `admin` role.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🏠 Storefront Experience
+- **Premium UI/UX:** HSL-based premium dark mode interface, dynamic gradient **Hero Banner**, and seamless micro-animations.
+- **Persistent Categories Sidebar:** A clean, fixed-position category list rendered on both the home page and category detail routes (`/category/{id}`).
+- **4-Column Grid Layout:** Responsive item grid scaling to a modern 4-column layout on desktop viewports.
+- **Rich Product Details Page:** Immersive item showcase displaying key attributes, images, detailed specifications, real-time pricing, and stock levels.
+- **Dynamic Cart Indicator:** Context-aware navigation bar badge hidden when the basket is empty, displaying real-time item counts dynamically in a highlighted green parenthetical structure once an item is added (e.g., **Cart (3)**).
 
-## Laravel Sponsors
+### 🛒 Cart & Order Processing
+- **Seamless Add-to-Cart:** Simple quantity selection inputs on product pages to pass items smoothly into the shopping cart state.
+- **Concurrent Stock Protection:** Real-time stock validations triggered upon adding items to the basket and proceeding through checkout. Utilizes database row-level locking (`lockForUpdate`) to guarantee absolute data consistency under heavy traffic.
+- **Out of Stock Architecture:** Automatically swaps active buttons to "Out of Stock" indicators on product pages and overlays a "Sold Out" badge across grid items when inventories hit zero.
+- **Dynamic Checkout Engine:** Seamless, state-driven checkout wizard capturing shipping specifics (Full Name, Address, Phone Number) alongside diverse gateway mechanisms (Credit Card / Cash on Delivery).
+- **Post-Purchase Success Hub:** Premium receipt generation page displaying unique tracking codes alongside comprehensive transaction tables.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### ⚙️ Administrative Command Center (Admin Dashboard)
+- **High-Level Analytics Matrix:** Aggregated metric widgets showcasing total inventory counts, successful order processing pipelines, and active notifications for items hitting critical low stock levels (stock < 10).
+- **Visual Inventory Management:** Critical resource alerts with color-coded warning structures (Red/Orange/Green) for rapid warehouse sorting.
+- **Asynchronous Product CRUD:** Completely dynamic catalog maintenance (Create, Read, Update, Delete) driven by modern AJAX/Fetch API layers for instantaneous mutations alongside reactive image URL previews.
+- **Modular Category Structuring:** Clean multi-tier management facilitating recursive nested categories (`parent_id`) and visibility state toggles.
+- **Fulfillment Pipeline:** Unified operational board allowing administrators to review, modify shipment processing stages (Accepted, Shipped, Cancelled, etc.), and append tracking tracking IDs.
